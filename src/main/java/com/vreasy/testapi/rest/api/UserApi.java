@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.vreasy.testapi.model.Privilege;
 import com.vreasy.testapi.model.Role;
 import com.vreasy.testapi.model.User;
 import com.vreasy.testapi.rest.dto.Mapper;
@@ -40,7 +41,7 @@ public class UserApi extends GenericApi<UserDTO, User> {
     }
     
     @Override
-    @PreAuthorize("hasRole('" + Role.ROLE_ADMIN + "')")
+    @PreAuthorize("hasRole('" + Role.ROLE_ADMIN + "') or hasAuthority('" + Privilege.READ_USERS_PRIVILEGE  + "')")
     public HttpEntity<List<UserDTO>> findAll( 
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) Integer page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) Integer size,

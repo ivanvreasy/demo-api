@@ -15,6 +15,9 @@ import lombok.ToString;
 @ToString(exclude = "roles")
 public class Privilege extends GenericModel {
 
+    public static final String READ_PRIVILEGE = "READ_PRIVILEGE";
+    public static final String READ_USERS_PRIVILEGE = "READ_USERS_PRIVILEGE";
+    public static final String WRITE_PRIVILEGE = "WRITE_PRIVILEGE";
     
     private String name;
     
