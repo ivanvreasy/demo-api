@@ -2,6 +2,7 @@ package com.vreasy.testapi.security;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  *
  */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapter {
 
     public static final String SIGN_UP_URL = "/users/sign-up";
@@ -49,8 +51,8 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
                 .antMatchers("/actuator/**").permitAll()
             .anyRequest().authenticated()
             .and()
-            .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-            .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), userDetailsService))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), userDetailsService))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // avoids session creation
         
         

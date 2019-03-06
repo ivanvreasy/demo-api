@@ -7,10 +7,12 @@ import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(exclude = "roles")
 public class Privilege extends GenericModel {
 
     

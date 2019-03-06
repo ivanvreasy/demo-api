@@ -1,6 +1,11 @@
 package com.vreasy.testapi.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.vreasy.testapi.model.Role;
 import com.vreasy.testapi.model.User;
@@ -23,10 +28,7 @@ public class UserService extends GenericService<User> {
     public void signup(User user) {
 
         Role roleUser = roleRepository.findByName(Role.ROLE_USER);
-
-        user.getRoles().add(roleUser);
-        roleUser.getUsers().add(user);
-
+        user.setRoles(Arrays.asList(roleUser));
         log.info("Creating new user {} with role {}", user, roleUser);
 
         create(user);

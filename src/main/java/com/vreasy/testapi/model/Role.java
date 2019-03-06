@@ -9,20 +9,18 @@ import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(exclude = "privileges")
 public class Role extends GenericModel {
     
     public static final String  ROLE_ADMIN   = "ROLE_ADMIN";
     public static final String  ROLE_USER    =  "ROLE_USER";
     
     private String name;
-    
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
-    
     
     @ManyToMany
     @JoinTable(

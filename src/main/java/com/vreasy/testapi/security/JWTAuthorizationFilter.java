@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.auth0.jwt.JWT;
@@ -18,9 +20,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 // https://auth0.com/blog/implementing-jwt-authentication-on-spring-boot/
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
-    
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+
+    private final UserDetailsService userDetailsService;
+
+    public JWTAuthorizationFilter(AuthenticationManager authManager, UserDetailsService userDetailsService) {
         super(authManager);
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -42,13 +47,16 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(WebSecurityConfigurerAdapterImpl.HEADER_STRING);
         if (token != null) {
+
             // parse the token.
             String user = JWT.require(Algorithm.HMAC512(WebSecurityConfigurerAdapterImpl.SECRET.getBytes())).build()
                     .verify(token.replace(WebSecurityConfigurerAdapterImpl.TOKEN_PREFIX, "")).getSubject();
 
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                UserDetails userDetails = userDetailsService.loadUserByUsername(user);
+                return new UsernamePasswordAuthenticationToken(user, null, userDetails.getAuthorities());
             }
+
             return null;
         }
         return null;
