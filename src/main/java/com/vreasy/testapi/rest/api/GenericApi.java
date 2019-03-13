@@ -53,10 +53,8 @@ public abstract class GenericApi<T extends GenericDTO, K extends GenericModel> {
         
         Page<K> pageResult = service.findAll(page, size);
         List<K> models = pageResult.getContent();
-
-        List<T> entities = models.stream().map(model -> mapper.convertToDto(model, classDTO))
-                .collect(Collectors.toList());
-
+        List<T> entities = mapper.convertToDto(models, classDTO);
+        
         String linkHeader = UrlBuilder.addLinkHeaderOnPagedResourceRetrieval(uriBuilder, getResourceName(),
                 pageResult.getNumber(), pageResult.getTotalPages(), pageResult.getNumberOfElements());
         response.addHeader(HttpHeaders.LINK, linkHeader);
