@@ -11,4 +11,6 @@ import lombok.EqualsAndHashCode;
 public class Listing extends GenericModel {
 
     private String title;
+    private String description;
+    
 }
